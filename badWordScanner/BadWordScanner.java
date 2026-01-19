@@ -16,7 +16,7 @@ public class BadWordScanner {
     private final int MAX_CACHE_SIZE = 10000;
     private final int MAX_CACHED_WORD_LENGTH = 50;
     private Map<String, Response> cache = Collections.synchronizedMap( //Cache so more often used words are faster and don't need AI
-            new LinkedHashMap<String, Response>(MAX_CACHE_SIZE, 0.75f, true) {
+            new LinkedHashMap<String, Response>(1000, 0.75f, true) {
                 @Override
                 protected boolean removeEldestEntry(Map.Entry<String, Response> eldest) {
                     return size() > MAX_CACHE_SIZE;
