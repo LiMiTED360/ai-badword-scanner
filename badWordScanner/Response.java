@@ -1,11 +1,11 @@
 package badWordScanner;
 
 public class Response {
-    public boolean issave;
+    public boolean isSave;
     public String message;
 
-    public Response(boolean issave, String message) {
-        this.issave = issave;
+    public Response(boolean isSave, String message) {
+        this.isSave = isSave;
         this.message = message;
     }
 }

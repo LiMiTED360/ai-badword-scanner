@@ -7,7 +7,7 @@ import java.net.http.HttpResponse;
 import static badWordScanner.helper.JsonHelper.*;
 
 public class BadWordScanner {
-    private Sensetivity sensetivity;
+    private Sensitivity sensitivity;
     private String apiUrl;
     private String aiModel;
 
@@ -17,14 +17,14 @@ public class BadWordScanner {
     private String user = "BadWordScanner";
 
 
-    public BadWordScanner(Sensetivity sensetivity, String api_url,  String ai_model) {
-        this.sensetivity = sensetivity;
+    public BadWordScanner(Sensitivity sensitivity, String api_url, String ai_model) {
+        this.sensitivity = sensitivity;
         this.apiUrl = api_url;
         this.aiModel = ai_model;
     }
 
     public Response Check(String text) {
-        if (sensetivity == Sensetivity.NOFILTER) {
+        if (sensitivity == Sensitivity.NOFILTER) {
             return new Response(true, "");
         } else {
             String response = Checkmessage(text);
@@ -45,10 +45,10 @@ public class BadWordScanner {
                     "4. This also applies if the word is hidden, i.e. letters have been swapped or reversed. " +
 
                     "Conditions that should be [true]:" +
-                    sensetivity.getConditions() +
+                    sensitivity.getConditions() +
 
                     "Exceptions that should be [false]:" +
-                    sensetivity.getExceptions();
+                    sensitivity.getExceptions();
 
             String saveSystempromt = makeSafeForJson(systemprompt);
 
@@ -57,7 +57,7 @@ public class BadWordScanner {
                     "  \"messages\": [\n" +
                     "    {\"role\": \"system\", \"content\": \"" + saveSystempromt + "\"},\n" +
 
-                    makeContextForJson(sensetivity.getExample())  +
+                    makeContextForJson(sensitivity.getExample())  +
 
                     "    {\"role\": \"user\", \"content\": \"Analyze this text: " + safeMessage + "\"}\n" +
                     "  ],\n" +
@@ -99,11 +99,11 @@ public class BadWordScanner {
         }
     }
 
-    public Sensetivity getSensetivity() {
-        return sensetivity;
+    public Sensitivity getSensetivity() {
+        return sensitivity;
     }
-    public void setSensetivity(Sensetivity sensetivity) {
-        this.sensetivity = sensetivity;
+    public void setSensetivity(Sensitivity sensetivity) {
+        this.sensitivity = sensetivity;
     }
     public String getApiUrl() {
         return apiUrl;
