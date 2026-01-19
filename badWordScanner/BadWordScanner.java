@@ -77,7 +77,6 @@ public class BadWordScanner {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
             return "[error] connection problem";
         }
     }

@@ -23,7 +23,7 @@ public class JsonHelper {
             return cleanUpAnswer(foundContent);
         }
 
-        return "[error] Konnte Antwort nicht verstehen, DEBUG - Konnte JSON nicht lesen: + jsonResponse";
+        return "[error] Konnte Antwort nicht verstehen, DEBUG - Konnte JSON nicht lesen: " + jsonResponse;
     }
 
     private static String cleanUpAnswer(String jsonResponse) {

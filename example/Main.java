@@ -8,7 +8,7 @@ import badWordScanner.Sensitivity;
 public class Main {
     static String input = "";
 
-    public static void main() {
+    public static void main(String[] args) {
         System.out.println("Scanner Bereit");
         Scanner scanner = new Scanner(System.in);
 
