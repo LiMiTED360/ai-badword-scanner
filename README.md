@@ -1,8 +1,8 @@
-# AI BadWord Scanner (German and Englisch) 
+# AI BadWord Scanner (German and English) 
 
-A lightweight Java library that validates **German or Englisch text** using an external AI API. It detects profanity, toxicity, and inappropriate content by analyzing the context, rather than just matching words against a list.
+A lightweight Java library that validates **German or English text** using an external AI API. It detects profanity, toxicity, and inappropriate content by analyzing the context, rather than just matching words against a list.
 
-> DE/EN **Note:** This library is currently optimized for the **German and Englisch language**, but it might work with others two. If you want to try use EN.
+> DE/EN **Note:** This library is currently optimized for the **German and English language**, but it might work with others two. If you want to try use EN.
 
 ## Features
 
@@ -19,6 +19,10 @@ Since this is a lightweight library, you can currently install it by adding the 
 
 1.  Download the `badWordScanner` folder from this repository.
 2.  Copy the package into your Java project's source directory.
+
+## SetUp
+
+I woud Recoment LM Studio, its the simlest version, and has a good GUI, however you can also use a API 
 
 ## Usage
 
@@ -42,21 +46,25 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         //There are a few Sensitivity: ZERO_TOLERANCE, PROFESSIONAL, STANDARD and MINIMAL
-        //There are a few Languages: German: DE, Englisch: EN
+        //There are a few Languages: German: DE, English: EN
         //You Have to use your own API
-        //Is an Example for LM Studio, using the qwen2.5-3b-instruct model (3B is way too weak, it is just for testing!)
+        //Is an Example for LM Studio, using the qwen2.5-3b-instruct model (3B is probably a little weak, but enough)
         BadWordScanner badWordScanner = new BadWordScanner(Sensitivity.ZERO_TOLERANCE, Language.EN, "http://localhost:1234/v1/chat/completions", "qwen2.5-3b-instruct");
 
         while (true) {
             input = scanner.nextLine();
             if (input.equals("exit")) break;
 
-            //Gives you a Response Objekt
+            //Gives you a Response Objekt 
             Response output = badWordScanner.check(input);
 
+            //isSave()  function tells you whether the text contains any bad words
+            //true = the text is safe
+            //false = the text is not safe
             if (output.isSafe()) {
                 System.out.println("-Text is fine-");
             } else if (!output.isSafe()) {
+                //getMessage gives you the reasoning behind why the text is not safe, explained by the AI
                 System.out.println(output.getMessage());
             }
         }
