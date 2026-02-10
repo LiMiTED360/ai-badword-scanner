@@ -73,6 +73,11 @@ public class BadWordScanner {
     private String checkMessage(String text) {
 
         String safeMessage = makeSafeForJson(text);
+        String blackListSection = "";
+
+        if (!smartBlacklist.isEmpty()) {
+            blackListSection = "BlackList, things that are always [true] no matter what, even if hidden:";
+        }
 
         String systemprompt = "You are a moderator. Check the following " + language.getString() + " text. \n" +
                 "**Rules: **\n" +
@@ -84,7 +89,7 @@ public class BadWordScanner {
                 "Conditions that should be [true]:" +
                 sensitivity.getConditions() + "\n" +
 
-                "BlackList, things that are always [true] not mater what, even if hidden:" +
+                blackListSection +
                 getAllInSmartBlacklist() + "\n" +
 
                 "Exceptions that should be [false]:" +
@@ -151,7 +156,7 @@ public class BadWordScanner {
     }
 
     private void manageCache(String message, Response response) {
-        if (cache.size() <= maxCachedWordLength && !response.getMessage().contains("[error]")) {
+        if (message.length() <= maxCachedWordLength && !response.getMessage().contains("[error]")) {
             String cleanMessage = message.strip();
 
             cache.put(cleanMessage.toLowerCase(), response);
