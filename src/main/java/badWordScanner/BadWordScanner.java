@@ -69,52 +69,53 @@ public class BadWordScanner {
     }
 
 
-    public String checkMessage(String text) {
+    private String checkMessage(String text) {
+
+        String safeMessage = makeSafeForJson(text);
+
+        String systemprompt = "You are a moderator. Check the following " + language.getString() + " text. " +
+                "**Rules: **" +
+                "1. If the text does NOT meet the conditions: Respond ONLY with: [false] " +
+                "2. If the text meets the conditions (including hidden ones such as Leetspeak, e.g., ‘3’ instead of ‘e’): Respond with: [true] - followed by the words that meet the conditions and a brief explanation of why you recognized a word (max. 1 sentence). " +
+                "3. Send [true] or [false] first, nothing else!!! The first thing you send must be one of these!" +
+                "4. This also applies if the word is hidden, i.e. letters have been swapped or reversed. " +
+
+                "Conditions that should be [true]:" +
+                sensitivity.getConditions() +
+
+                "Exceptions that should be [false]:" +
+                sensitivity.getExceptions();
+
+        String safeSystemPrompt = makeSafeForJson(systemprompt);
+
+        String[][] example;
+
+        switch (language) {
+            case DE -> example = sensitivity.getExampleDE();
+            default -> example = sensitivity.getExampleEN();
+        }
+
+        String jsonBody = "{\n" +
+                "  \"model\": \"" + aiModel + "\",\n" +
+                "  \"messages\": [\n" +
+                "    {\"role\": \"system\", \"content\": \"" + safeSystemPrompt + "\"},\n" +
+
+                //Adds Examples as Context for the AI
+                makeContextForJson(example)  +
+
+
+                //Adds new message for the AI to Check
+                "    {\"role\": \"user\", \"content\": \"" + safeMessage + "\"}\n" +
+                "  ],\n" +
+
+                //Gives AI the Parameters
+                "  \"temperature\": " + temperature + ",\n" +
+                "  \"top_p\": " + top_p + ",\n" +
+                "  \"max_tokens\": " + max_tokens + ",\n" +
+                "  \"user\": \"" + user + "\"" +
+                "}";
+
         try {
-            String safeMessage = makeSafeForJson(text);
-
-            String systemprompt = "You are a moderator. Check the following " + language.getString() + " text. " +
-                    "**Rules: **" +
-                    "1. If the text does NOT meet the conditions: Respond ONLY with: [false] " +
-                    "2. If the text meets the conditions (including hidden ones such as Leetspeak, e.g., ‘3’ instead of ‘e’): Respond with: [true] - followed by the words that meet the conditions and a brief explanation of why you recognized a word (max. 1 sentence). " +
-                    "3. Send [true] or [false] first, nothing else!!! The first thing you send must be one of these!" +
-                    "4. This also applies if the word is hidden, i.e. letters have been swapped or reversed. " +
-
-                    "Conditions that should be [true]:" +
-                    sensitivity.getConditions() +
-
-                    "Exceptions that should be [false]:" +
-                    sensitivity.getExceptions();
-
-            String safeSystemPrompt = makeSafeForJson(systemprompt);
-
-            String[][] example;
-
-            switch (language) {
-                case DE -> example = sensitivity.getExampleDE();
-                default -> example = sensitivity.getExampleEN();
-            }
-
-            String jsonBody = "{\n" +
-                    "  \"model\": \"" + aiModel + "\",\n" +
-                    "  \"messages\": [\n" +
-                    "    {\"role\": \"system\", \"content\": \"" + safeSystemPrompt + "\"},\n" +
-
-                    //Adds Examples as Context for the AI
-                    makeContextForJson(example)  +
-
-
-                    //Adds new message for the AI to Check
-                    "    {\"role\": \"user\", \"content\": \"" + safeMessage + "\"}\n" +
-                    "  ],\n" +
-
-                    //Gives AI the Parameters
-                    "  \"temperature\": " + temperature + ",\n" +
-                    "  \"top_p\": " + top_p + ",\n" +
-                    "  \"max_tokens\": " + max_tokens + ",\n" +
-                    "  \"user\": \"" + user + "\"" +
-                    "}";
-
 
             HttpResponse<String> response = HttpHelper.sendHttpRequest(jsonBody, apiUrl);
 
