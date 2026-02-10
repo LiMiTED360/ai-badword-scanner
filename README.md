@@ -12,7 +12,8 @@ A lightweight Java library that validates **German or English text** using an ex
 * **Native Java:** Easy to drop into any Java project.
 * **Smart Caching System(Optional):** Integrated, memory-efficient cache that responds to repeated requests immediately without calling the AI. This saves API costs and reduces latency.
 * **Intelligentes Ressourcen-Management:** Only stores relevant short texts (less than X characters) and automatically deletes the longest unused entries (LRU) to keep RAM consumption to a minimum.
-* **Blacklist:** Simple blacklist that instantly flags words that you can set yourself (Does not use AI, it's just a simple blacklist)
+* **Simple Blacklist:** Simple blacklist that instantly flags words that you can set yourself. (Does not use AI, it's just a simple blacklist)
+* **Smart Blacklist:** Smart Blacklist that can also understand context. 
 
 ## Installation
 
