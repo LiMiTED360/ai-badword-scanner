@@ -13,6 +13,7 @@ public class BadWordScanner {
     private String aiModel;
 
     private List<String> blacklist = new ArrayList<>();
+    private List<String> smartBlacklist = new ArrayList<>();
 
     private boolean useCache;
     private int maxCacheSize; //Recommend 10000
@@ -73,15 +74,18 @@ public class BadWordScanner {
 
         String safeMessage = makeSafeForJson(text);
 
-        String systemprompt = "You are a moderator. Check the following " + language.getString() + " text. " +
-                "**Rules: **" +
-                "1. If the text does NOT meet the conditions: Respond ONLY with: [false] " +
-                "2. If the text meets the conditions (including hidden ones such as Leetspeak, e.g., ‘3’ instead of ‘e’): Respond with: [true] - followed by the words that meet the conditions and a brief explanation of why you recognized a word (max. 1 sentence). " +
-                "3. Send [true] or [false] first, nothing else!!! The first thing you send must be one of these!" +
-                "4. This also applies if the word is hidden, i.e. letters have been swapped or reversed. " +
+        String systemprompt = "You are a moderator. Check the following " + language.getString() + " text. \n" +
+                "**Rules: **\n" +
+                "1. If the text does NOT meet the conditions: Respond ONLY with: [false] \n" +
+                "2. If the text meets the conditions (including hidden ones such as Leetspeak, e.g., ‘3’ instead of ‘e’): Respond with: [true] - followed by the words that meet the conditions and a brief explanation of why you recognized a word (max. 1 sentence). \n" +
+                "3. Send [true] or [false] first, nothing else!!! The first thing you send must be one of these!\n" +
+                "4. This also applies if the word is hidden, i.e. letters have been swapped or reversed. \n" +
 
                 "Conditions that should be [true]:" +
-                sensitivity.getConditions() +
+                sensitivity.getConditions() + "\n" +
+
+                "BlackList, things that are always [true] not mater what, even if hidden:" +
+                getAllInSmartBlacklist() + "\n" +
 
                 "Exceptions that should be [false]:" +
                 sensitivity.getExceptions();
@@ -154,13 +158,27 @@ public class BadWordScanner {
         }
     }
 
-    public boolean checkBlacklist(String text) {
+    private boolean checkBlacklist(String text) {
         for (String word : blacklist) {
             if (text.contains(word.toLowerCase())) {
                 return true;
             }
         }
         return false;
+    }
+
+    private String getAllInSmartBlacklist() {
+        StringBuilder output = new StringBuilder();
+
+        if  (!smartBlacklist.isEmpty()) {
+            for  (String word : smartBlacklist) {
+                output.append(word).append(", ");
+            }
+
+            output.setLength(output.length() - 2);
+        }
+
+        return output.toString();
     }
 
     public void clearCach() {
@@ -228,6 +246,16 @@ public class BadWordScanner {
     }
     public void addBlacklist(String word) {
         this.blacklist.add(word);
+    }
+
+    public List<String> getSmartBlacklist() {
+        return smartBlacklist;
+    }
+    public void setSmartBlacklist(List<String> smartBlacklist) {
+        this.smartBlacklist = smartBlacklist;
+    }
+    public void addSmartBlacklist(String wordOrSentence) {
+        this.smartBlacklist.add(wordOrSentence);
     }
 
     //You Probably won't need this
