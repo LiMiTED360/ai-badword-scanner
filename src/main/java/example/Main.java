@@ -20,6 +20,9 @@ public class Main {
         //If you don't specify a max cache size and max cached word length it automatically deactivates caching
         BadWordScanner badWordScanner = new BadWordScanner(Sensitivity.ZERO_TOLERANCE, Language.EN, "http://localhost:1234/v1/chat/completions", "qwen2.5-3b-instruct", 10000, 25);
 
+        //Add a word to the blacklist, which will instantly be flagged
+        badWordScanner.addBlacklist("ABadWord");
+
         while (true) {
             input = scanner.nextLine();
             if (input.equals("exit")) break;

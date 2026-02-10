@@ -12,6 +12,8 @@ public class BadWordScanner {
     private String apiUrl;
     private String aiModel;
 
+    private List<String> blacklist = new ArrayList<>();
+
     private boolean useCache;
     private int maxCacheSize; //Recommend 10000
     private int maxCachedWordLength;//Recommend 25 - 50
@@ -57,6 +59,8 @@ public class BadWordScanner {
             return new Response(true, "");
         } else if (useCache && cache.containsKey(cachKey)) {
             response = cache.get(cachKey);
+        } else if (checkBlacklist(cachKey)) {
+            response = new Response(false, "In BlackList");
         } else {
             response = createChecked(checkMessage(text));
         }
@@ -149,6 +153,15 @@ public class BadWordScanner {
         }
     }
 
+    public boolean checkBlacklist(String text) {
+        for (String word : blacklist) {
+            if (text.contains(word.toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void clearCach() {
         if (useCache) cache.clear();
     }
@@ -204,6 +217,16 @@ public class BadWordScanner {
     }
     public void setCache(Map<String, Response> cache) {
         this.cache = cache;
+    }
+
+    public List<String> getBlacklist() {
+        return blacklist;
+    }
+    public void setBlacklist(List<String> blacklist) {
+        this.blacklist = blacklist;
+    }
+    public void addBlacklist(String word) {
+        this.blacklist.add(word);
     }
 
     //You Probably won't need this

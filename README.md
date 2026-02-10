@@ -12,6 +12,7 @@ A lightweight Java library that validates **German or English text** using an ex
 * **Native Java:** Easy to drop into any Java project.
 * **Smart Caching System(Optional):** Integrated, memory-efficient cache that responds to repeated requests immediately without calling the AI. This saves API costs and reduces latency.
 * **Intelligentes Ressourcen-Management:** Only stores relevant short texts (less than X characters) and automatically deletes the longest unused entries (LRU) to keep RAM consumption to a minimum.
+* **Blacklist:** Simple blacklist that instantly flags words that you can set yourself (Does not use AI, it's just a simple blacklist)
 
 ## Installation
 
@@ -89,6 +90,9 @@ public class Main {
         //Is an Example for LM Studio, using the qwen2.5-3b-instruct model (3B is probably a little weak, but enough)
         //If you don't specify a max cache size and max cached word length it automatically deactivates caching
         BadWordScanner badWordScanner = new BadWordScanner(Sensitivity.ZERO_TOLERANCE, Language.EN, "http://localhost:1234/v1/chat/completions", "qwen2.5-3b-instruct", 10000, 25);
+
+        //Add a word to the blacklist, which will instantly be flagged
+        badWordScanner.addBlacklist("ABadWord");
 
         while (true) {
             input = scanner.nextLine();
