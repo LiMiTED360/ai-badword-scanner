@@ -39,7 +39,7 @@ public class Main {
             //false = the text is not safe
             if (output.isSafe()) {
                 System.out.println("-Text is fine-");
-            } else if (!output.isSafe()) {
+            } else {
                 //getMessage gives you the reasoning behind why the text is not safe, explained by the AI
                 System.out.println(output.getMessage());
             }
