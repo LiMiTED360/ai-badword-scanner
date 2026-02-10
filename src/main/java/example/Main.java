@@ -23,6 +23,10 @@ public class Main {
         //Add a word to the blacklist, which will instantly be flagged
         badWordScanner.addBlacklist("ABadWord");
 
+        //Add a word or describe something that will always be flagged
+        //Might not work with weaker AIs (recommend minimum: 7B)
+        badWordScanner.addSmartBlacklist("Anything that is against LiMiTED360");
+
         while (true) {
             input = scanner.nextLine();
             if (input.equals("exit")) break;
@@ -35,7 +39,7 @@ public class Main {
             //false = the text is not safe
             if (output.isSafe()) {
                 System.out.println("-Text is fine-");
-            } else if (!output.isSafe()) {
+            } else {
                 //getMessage gives you the reasoning behind why the text is not safe, explained by the AI
                 System.out.println(output.getMessage());
             }
